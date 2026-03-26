@@ -1,0 +1,281 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+<meta charset="UTF-8">
+<title>StreamSphere</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#0f0f0f;
+color:white;
+}
+
+header{
+background:#202020;
+padding:15px;
+font-size:22px;
+font-weight:bold;
+display:flex;
+justify-content:space-between;
+}
+
+button{
+padding:8px 14px;
+border:none;
+border-radius:8px;
+background:red;
+color:white;
+cursor:pointer;
+}
+
+input{
+padding:8px;
+border-radius:6px;
+border:none;
+margin:5px;
+}
+
+.container{
+padding:25px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
+
+.video{
+background:#1a1a1a;
+padding:10px;
+border-radius:10px;
+}
+
+video{
+width:100%;
+border-radius:8px;
+}
+
+.comment{
+background:#222;
+padding:6px;
+margin-top:4px;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<div>StreamSphere</div>
+<div id="userArea"></div>
+</header>
+
+<div id="signup" class="container">
+
+<h2>Criar conta</h2>
+
+<input id="username" placeholder="Seu nome">
+
+<br>
+
+<select id="content">
+<option value="">Conteúdo favorito</option>
+<option>Games</option>
+<option>Notícias</option>
+<option>Tecnologia</option>
+<option>Entretenimento</option>
+</select>
+
+<br>
+
+<button onclick="createAccount()">Criar conta</button>
+
+</div>
+
+<div id="home" class="container" style="display:none">
+
+<h2 id="welcome"></h2>
+
+<h3>Enviar vídeo</h3>
+
+<input type="file" id="videoUpload">
+
+<br>
+
+<input id="videoTitle" placeholder="Título do vídeo">
+
+<button onclick="uploadVideo()">Postar vídeo</button>
+
+<h3>Feed</h3>
+
+<div id="feed" class="grid"></div>
+
+</div>
+
+<script>
+
+let videos = JSON.parse(localStorage.getItem("videos")) || []
+
+function createAccount(){
+
+let name=document.getElementById("username").value
+
+if(name===""){
+alert("Digite seu nome")
+return
+}
+
+let user={name:name}
+
+localStorage.setItem("user",JSON.stringify(user))
+
+loadHome()
+
+}
+
+function loadHome(){
+
+let user=JSON.parse(localStorage.getItem("user"))
+
+if(user){
+
+document.getElementById("signup").style.display="none"
+document.getElementById("home").style.display="block"
+
+document.getElementById("welcome").innerText="Olá "+user.name
+
+document.getElementById("userArea").innerText=user.name
+
+renderVideos()
+
+}
+
+}
+
+function uploadVideo(){
+
+let file=document.getElementById("videoUpload").files[0]
+let title=document.getElementById("videoTitle").value
+
+if(!file){
+alert("Escolha um vídeo")
+return
+}
+
+let url=URL.createObjectURL(file)
+
+let video={
+
+title:title,
+url:url,
+likes:0,
+comments:[]
+
+}
+
+videos.push(video)
+
+localStorage.setItem("videos",JSON.stringify(videos))
+
+renderVideos()
+
+}
+
+function renderVideos(){
+
+let feed=document.getElementById("feed")
+
+feed.innerHTML=""
+
+videos.forEach((v,i)=>{
+
+let div=document.createElement("div")
+
+div.className="video"
+
+div.innerHTML=`
+
+<h4>${v.title}</h4>
+
+<video controls src="${v.url}"></video>
+
+<p>👍 ${v.likes}</p>
+
+<button onclick="likeVideo(${i})">Curtir</button>
+
+<input placeholder="Comentário" id="c${i}">
+
+<button onclick="commentVideo(${i})">Comentar</button>
+
+<div id="comments${i}"></div>
+
+`
+
+feed.appendChild(div)
+
+renderComments(i)
+
+})
+
+}
+
+function likeVideo(i){
+
+videos[i].likes++
+
+localStorage.setItem("videos",JSON.stringify(videos))
+
+renderVideos()
+
+}
+
+function commentVideo(i){
+
+let text=document.getElementById("c"+i).value
+
+videos[i].comments.push(text)
+
+localStorage.setItem("videos",JSON.stringify(videos))
+
+renderVideos()
+
+}
+
+function renderComments(i){
+
+let area=document.getElementById("comments"+i)
+
+if(!area)return
+
+area.innerHTML=""
+
+videos[i].comments.forEach(c=>{
+
+let d=document.createElement("div")
+
+d.className="comment"
+
+d.innerText=c
+
+area.appendChild(d)
+
+})
+
+}
+
+window.onload=loadHome
+
+</script>
+
+</body>
+</html>
+```

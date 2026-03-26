@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>StreamSphere</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 0; }
+        header { background: #1e1e1e; padding: 20px; text-align: center; }
+        h1 { margin: 0; color: #00d4ff; }
+        .container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
+        .video-card { background: #1e1e1e; margin: 10px; padding: 10px; width: 300px; border-radius: 8px; }
+        .video-card video { width: 100%; border-radius: 5px; }
+        .video-card h3 { margin: 10px 0 5px 0; color: #fff; }
+        .video-card p { margin: 5px 0; font-size: 14px; }
+        button { background: #00d4ff; border: none; color: #000; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #00b2cc; }
+        #signup { background: #1e1e1e; padding: 20px; text-align: center; margin-bottom: 20px; }
+        input { padding: 5px; margin: 5px; border-radius: 4px; border: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>StreamSphere</h1>
+</header>
+
+<div id="signup">
+    <h2>Cadastre-se</h2>
+    <input type="text" placeholder="Seu nome" id="username">
+    <input type="email" placeholder="Email" id="email">
+    <button onclick="signup()">Criar Conta</button>
+    <p id="signup-message"></p>
+</div>
+
+<div class="container">
+    <!-- Vídeo 1 -->
+    <div class="video-card">
+        <video controls>
+            <source src="video1.mp4" type="video/mp4">
+            Seu navegador não suporta vídeo.
+        </video>
+        <h3>Vídeo Exemplo 1</h3>
+        <p>Descrição do vídeo.</p>
+        <button onclick="like(1)">👍 Like <span id="likes-1">0</span></button>
+    </div>
+
+    <!-- Vídeo 2 -->
+    <div class="video-card">
+        <video controls>
+            <source src="video2.mp4" type="video/mp4">
+            Seu navegador não suporta vídeo.
+        </video>
+        <h3>Vídeo Exemplo 2</h3>
+        <p>Descrição do vídeo.</p>
+        <button onclick="like(2)">👍 Like <span id="likes-2">0</span></button>
+    </div>
+
+    <!-- Vídeo 3 -->
+    <div class="video-card">
+        <video controls>
+            <source src="video3.mp4" type="video/mp4">
+            Seu navegador não suporta vídeo.
+        </video>
+        <h3>Vídeo Exemplo 3</h3>
+        <p>Descrição do vídeo.</p>
+        <button onclick="like(3)">👍 Like <span id="likes-3">0</span></button>
+    </div>
+</div>
+
+<script>
+    let likes = [0, 0, 0]; // contador de likes para 3 vídeos
+
+    function like(videoId) {
+        likes[videoId - 1]++;
+        document.getElementById(`likes-${videoId}`).innerText = likes[videoId - 1];
+    }
+
+    function signup() {
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        if(username && email) {
+            document.getElementById("signup-message").innerText = `Conta criada! Bem-vindo, ${username} 🎉`;
+        } else {
+            document.getElementById("signup-message").innerText = `Preencha todos os campos.`;
+        }
+    }
+</script>
+
+</body>
+</html>
